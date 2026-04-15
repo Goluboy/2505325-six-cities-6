@@ -1,4 +1,4 @@
-import { HouseType, AmenitiesType, UserType } from "../../shared/index.js";
+import { HouseType, AmenitiesType, UserType } from '../../shared/index.js';
 
 
 export interface MockDataResponse {

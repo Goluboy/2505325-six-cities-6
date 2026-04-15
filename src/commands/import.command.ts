@@ -2,7 +2,6 @@ import { CommandInterface } from '../commands/command.interface.js';
 import { TSVFileReader } from '../shared/libs/file-reader/tsv-file-reader.js';
 import chalk from 'chalk';
 import { createReadStream } from 'node:fs';
-import { pipeline } from 'node:stream/promises';
 import { createInterface } from 'node:readline';
 
 export class ImportCommand implements CommandInterface {
@@ -45,7 +44,7 @@ export class ImportCommand implements CommandInterface {
         }
 
         try {
-          const offer = fileReader.parseLine(line);
+          fileReader.parseLine(line);
           importedCount++;
           
           if (importedCount % 1000 === 0) {

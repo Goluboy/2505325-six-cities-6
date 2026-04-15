@@ -2,7 +2,7 @@ export function getRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function getRandomFloat(min: number, max: number, precision: number = 0): number {
+export function getRandomFloat(min: number, max: number, precision = 0): number {
   const value = Math.random() * (max - min) + min;
   return Number(value.toFixed(precision));
 }

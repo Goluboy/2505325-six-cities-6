@@ -42,7 +42,7 @@ export class GenerateCommand implements CommandInterface {
       for (let i = 0; i < count; i++) {
         const offer = generator.generate();
         const line = this.formatOfferToTSV(offer);
-        await writer.write(line + '\n');
+        await writer.write(`${line}\n`);
 
         if ((i + 1) % 100 === 0) {
           console.log(chalk.green(`Generated ${i + 1}/${count} offers...`));
