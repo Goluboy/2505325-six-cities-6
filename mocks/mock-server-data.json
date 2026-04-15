@@ -1,0 +1,121 @@
+{
+  "titles": [
+    "Уютная квартира в центре города",
+    "Современная студия с видом на реку",
+    "Роскошный пентхаус с террасой",
+    "Тихий дом в пригороде",
+    "Стильный лофт в историческом районе",
+    "Апартаменты рядом с парком",
+    "Комната в_shared квартире",
+    "Отельный номер премиум-класса"
+  ],
+  "descriptions": [
+    "Прекрасное место для отдыха с семьей. Рядом магазины, рестораны и общественный транспорт.",
+    "Идеально подходит для деловых поездок. Быстрый Wi-Fi и рабочее пространство.",
+    "Наслаждайтесь панорамным видом на город из окон вашей квартиры.",
+    "Тихий район с развитой инфраструктурой. Отличный выбор для длительного проживания.",
+    "Светлая и просторная квартира с современным ремонтом и всеми удобствами.",
+    "Уютное гнездышко в самом сердце города. Все достопримечательности в шаговой доступности.",
+    "Бюджетный вариант для путешественников. Чисто, комфортно и безопасно.",
+    "Премиальное жилье с консьержем и подземной парковкой."
+  ],
+  "cities": [
+    { "name": "Paris", "latitude": 48.85661, "longitude": 2.351499 },
+    { "name": "Cologne", "latitude": 50.938361, "longitude": 6.959974 },
+    { "name": "Brussels", "latitude": 50.846557, "longitude": 4.351697 },
+    { "name": "Amsterdam", "latitude": 52.370216, "longitude": 4.895168 },
+    { "name": "Hamburg", "latitude": 53.550341, "longitude": 10.000654 },
+    { "name": "Dusseldorf", "latitude": 51.225402, "longitude": 6.776314 }
+  ],
+  "previewImages": [
+    "https://example.com/images/preview1.jpg",
+    "https://example.com/images/preview2.jpg",
+    "https://example.com/images/preview3.jpg",
+    "https://example.com/images/preview4.jpg",
+    "https://example.com/images/preview5.jpg",
+    "https://example.com/images/preview6.jpg",
+    "https://example.com/images/preview7.jpg",
+    "https://example.com/images/preview8.jpg"
+  ],
+  "photoSets": [
+    [
+      "https://example.com/photos/set1_1.jpg",
+      "https://example.com/photos/set1_2.jpg",
+      "https://example.com/photos/set1_3.jpg",
+      "https://example.com/photos/set1_4.jpg",
+      "https://example.com/photos/set1_5.jpg",
+      "https://example.com/photos/set1_6.jpg"
+    ],
+    [
+      "https://example.com/photos/set2_1.jpg",
+      "https://example.com/photos/set2_2.jpg",
+      "https://example.com/photos/set2_3.jpg",
+      "https://example.com/photos/set2_4.jpg",
+      "https://example.com/photos/set2_5.jpg",
+      "https://example.com/photos/set2_6.jpg"
+    ],
+    [
+      "https://example.com/photos/set3_1.jpg",
+      "https://example.com/photos/set3_2.jpg",
+      "https://example.com/photos/set3_3.jpg",
+      "https://example.com/photos/set3_4.jpg",
+      "https://example.com/photos/set3_5.jpg",
+      "https://example.com/photos/set3_6.jpg"
+    ],
+    [
+      "https://example.com/photos/set4_1.jpg",
+      "https://example.com/photos/set4_2.jpg",
+      "https://example.com/photos/set4_3.jpg",
+      "https://example.com/photos/set4_4.jpg",
+      "https://example.com/photos/set4_5.jpg",
+      "https://example.com/photos/set4_6.jpg"
+    ],
+    [
+      "https://example.com/photos/set5_1.jpg",
+      "https://example.com/photos/set5_2.jpg",
+      "https://example.com/photos/set5_3.jpg",
+      "https://example.com/photos/set5_4.jpg",
+      "https://example.com/photos/set5_5.jpg",
+      "https://example.com/photos/set5_6.jpg"
+    ]
+  ],
+  "houseTypes": ["apartment", "house", "room", "hotel"],
+  "amenities": ["Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"],
+  "userNames": [
+    "Иван Петров",
+    "Мария Сидорова",
+    "Алексей Смирнов",
+    "Елена Козлова",
+    "Дмитрий Волков",
+    "Ольга Новикова",
+    "Сергей Морозов",
+    "Анна Лебедева"
+  ],
+  "userEmails": [
+    "ivan.petrov@example.com",
+    "maria.sidorova@example.com",
+    "alexey.smirnov@example.com",
+    "elena.kozlova@example.com",
+    "dmitry.volkov@example.com",
+    "olga.novikova@example.com",
+    "sergey.morozov@example.com",
+    "anna.lebedeva@example.com"
+  ],
+  "userAvatars": [
+    "https://example.com/avatars/avatar1.jpg",
+    "https://example.com/avatars/avatar2.jpg",
+    "https://example.com/avatars/avatar3.jpg",
+    "https://example.com/avatars/avatar4.jpg",
+    "https://example.com/avatars/avatar5.jpg",
+    ""
+  ],
+  "userPasswords": [
+    "secure123",
+    "password456",
+    "qwerty789",
+    "admin321",
+    "user654",
+    "test987"
+  ],
+  "userTypes": ["default", "pro"]
+}
