@@ -41,7 +41,7 @@ export class VersionCommand implements CommandInterface {
       const version = this.readVersion();
       console.info(chalk.blue(version));
     } catch (error: unknown) {
-      console.error(chalk.red(`Failed to read version from ${this.filePath}`));
+      console.error(chalk.red('Failed to read version from ${this.filePath}'));
 
       if (error instanceof Error) {
         console.error(chalk.red(error.message));

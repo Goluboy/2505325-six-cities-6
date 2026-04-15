@@ -28,10 +28,10 @@ export class GenerateCommand implements CommandInterface {
     }
 
     try {
-      console.log(chalk.blue(`Fetching mock data from ${url}...`));
+      console.log(chalk.blue('Fetching mock data from ${url}...'));
       const mockData = await fetchMockData(url);
 
-      console.log(chalk.blue(`Generating ${count} offers...`));
+      console.log(chalk.blue('Generating ${count} offers...'));
       const generator = new OfferGenerator(mockData);
 
       const writer = new TSVFileWriter(filepath.trim());
@@ -42,25 +42,25 @@ export class GenerateCommand implements CommandInterface {
       for (let i = 0; i < count; i++) {
         const offer = generator.generate();
         const line = this.formatOfferToTSV(offer);
-        await writer.write(`${line}\n`);
+        await writer.write('${line}\n');
 
         if ((i + 1) % 100 === 0) {
-          console.log(chalk.green(`Generated ${i + 1}/${count} offers...`));
+          console.log(chalk.green('Generated ${i + 1}/${count} offers...'));
         }
       }
 
       writer.close();
 
-      console.log(chalk.green(`Successfully generated ${count} offers to ${filepath}`));
+      console.log(chalk.green('Successfully generated ${count} offers to ${filepath}'));
     } catch (error) {
-      console.error(chalk.red(`Failed to generate offers: ${(error as Error).message}`));
+      console.error(chalk.red('Failed to generate offers: ${(error as Error).message}'));
     }
   }
 
   private formatOfferToTSV(offer: ReturnType<OfferGenerator['generate']>): string {
     const amenitiesStr = offer.amenities.join(';');
     const photosStr = offer.photos.join(';');
-    const coordinatesStr = `${offer.coordinates.latitude},${offer.coordinates.longitude}`;
+    const coordinatesStr = '${offer.coordinates.latitude},${offer.coordinates.longitude}';
     const publishDateStr = offer.publishDate.toISOString().split('T')[0];
 
     return [

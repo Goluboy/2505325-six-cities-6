@@ -14,7 +14,7 @@ export class CLIApplication {
   public registerCommands(commandList: CommandInterface[]): void {
     commandList.forEach((command) => {
       if (Object.hasOwn(this.commands, command.getName())) {
-        throw new Error(`Command ${command.getName()} is already registered`);
+        throw new Error('Command ${command.getName()} is already registered');
       }
       this.commands[command.getName()] = command;
     });
@@ -26,7 +26,7 @@ export class CLIApplication {
 
   public getDefaultCommand(): CommandInterface | never {
     if (! this.commands[this.defaultCommand]) {
-      throw new Error(`The default command (${this.defaultCommand}) is not registered.`);
+      throw new Error('The default command (${this.defaultCommand}) is not registered.');
     }
     return this.commands[this.defaultCommand];
   }

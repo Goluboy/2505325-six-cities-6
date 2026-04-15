@@ -19,9 +19,9 @@ export class ImportCommand implements CommandInterface {
 
     try {
       const fileReader = new TSVFileReader(filename.trim());
-      
-      console.log(chalk.blue(`Starting import from: ${filename}`));
-      
+
+      console.log(chalk.blue('Starting import from: ${filename}'));
+
       let importedCount = 0;
       let errorCount = 0;
 
@@ -46,28 +46,28 @@ export class ImportCommand implements CommandInterface {
         try {
           fileReader.parseLine(line);
           importedCount++;
-          
+         
           if (importedCount % 1000 === 0) {
-            console.log(chalk.green(`Imported ${importedCount} records...`));
+            console.log(chalk.green('Imported ${importedCount} records...'));
           }
         } catch (parseError) {
           errorCount++;
-          console.warn(chalk.yellow(`Failed to parse line ${importedCount + errorCount}: ${(parseError as Error).message}`));
+          console.warn(chalk.yellow('Failed to parse line ${importedCount + errorCount}: ${(parseError as Error).message}'));
         }
       }
 
-      console.log(chalk.green(`Import completed successfully!`));
-      console.log(chalk.green(`Total records imported: ${importedCount}`));
+      console.log(chalk.green('Import completed successfully!'));
+      console.log(chalk.green('Total records imported: ${importedCount}'));
       if (errorCount > 0) {
-        console.log(chalk.yellow(`Errors encountered: ${errorCount}`));
+        console.log(chalk.yellow('Errors encountered: ${errorCount}'));
       }
     } catch (err) {
       if (!(err instanceof Error)) {
         throw err;
       }
 
-      console.error(chalk.red(`Can't import data from file: ${filename}`));
-      console.error(chalk.redBright(`Details: ${err.message}`));
+      console.error(chalk.red('Cant import data from file: ${filename}'));
+      console.error(chalk.redBright('Details: ${err.message}'));
     }
   }
 }

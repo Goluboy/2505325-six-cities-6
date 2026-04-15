@@ -18,9 +18,9 @@ export class TSVFileReader implements FileReader {
   public read(): void {
     try {
       this.rawData = readFileSync(this.filename, { encoding: 'utf-8' });
-      console.log(chalk.green(`Success with reading: ${this.filename}`));
+      console.log(chalk.green('Success with reading: ${this.filename}'));
     } catch (err) {
-      console.error(chalk.red(`Failed to read file: ${this.filename}`));
+      console.error(chalk.red('Failed to read file: ${this.filename}'));
       throw err;
     }
   }
@@ -35,7 +35,7 @@ export class TSVFileReader implements FileReader {
       .filter((row) => row.trim().length > 0)
       .slice(1);
 
-    console.log(chalk.blue(`Records found: ${lines.length}`));
+    console.log(chalk.blue('Records found: ${lines.length}'));
 
     return lines.map((line) => this.parseLine(line));
   }
@@ -67,12 +67,12 @@ export class TSVFileReader implements FileReader {
 
     const houseType = findHouseType(typeRaw?.trim());
     if (!houseType) {
-      throw new Error(`Invalid HouseType: "${typeRaw}"`);
+      throw new Error('Invalid HouseType: "${typeRaw}"');
     }
 
     const userType = findUserType(authorTypeRaw?.trim());
     if (!userType) {
-      throw new Error(`Invalid UserType: "${authorTypeRaw}"`);
+      throw new Error('Invalid UserType: "${authorTypeRaw}"');
     }
 
     const amenities = amenitiesRaw
@@ -80,7 +80,7 @@ export class TSVFileReader implements FileReader {
       .map((amenity) => {
         const found = findAmenityType(amenity.trim());
         if (!found) {
-          throw new Error(`Invalid AmenitiesType: "${amenity}"`);
+          throw new Error('Invalid AmenitiesType: "${amenity}"');
         }
         return found;
       });

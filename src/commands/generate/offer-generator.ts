@@ -81,7 +81,7 @@ export async function fetchMockData(baseUrl: string): Promise<MockDataResponse> 
     ];
 
     const results = await Promise.all(
-      endpoints.map((endpoint) => got.get(`${baseUrl}/${endpoint}`).json())
+      endpoints.map((endpoint) => got.get('${baseUrl}/${endpoint}').json())
     );
 
     const mockData: MockDataResponse = {
@@ -101,6 +101,6 @@ export async function fetchMockData(baseUrl: string): Promise<MockDataResponse> 
 
     return mockData;
   } catch (error) {
-    throw new Error(`Failed to fetch mock data from ${baseUrl}: ${(error as Error).message}`);
+    throw new Error('Failed to fetch mock data from ${baseUrl}: ${(error as Error).message}');
   }
 }
