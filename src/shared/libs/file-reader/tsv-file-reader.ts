@@ -37,10 +37,10 @@ export class TSVFileReader implements FileReader {
 
     console.log(chalk.blue(`Records found: ${lines.length}`));
 
-    return lines.map((line) => this.parsing(line));
+    return lines.map((line) => this.parseLine(line));
   }
 
-  private parsing(line: string): OfferInterface {
+  public parseLine(line: string): OfferInterface {
     const [
       title,
       description,
