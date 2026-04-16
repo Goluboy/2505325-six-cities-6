@@ -17,6 +17,18 @@ const configSchema = convict({
     env: 'DB_HOST',
     default: '127.0.0.1',
   },
+  dbPort: {
+    doc: 'Database port',
+    format: 'port',
+    env: 'DB_PORT',
+    default: 27017,
+  },
+  dbName: {
+    doc: 'Database name',
+    format: String,
+    env: 'DB_NAME',
+    default: 'six-cities',
+  },
   salt: {
     doc: 'Salt for password hashing',
     format: String,

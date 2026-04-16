@@ -33,9 +33,20 @@ export class CLIApplication {
 
   public processCommand(argv: string[]): void {
     const parsedCommand = CommandParser.parse(argv);
-    const [commandName] = Object.keys(parsedCommand);
+    const commandKeys = Object.keys(parsedCommand);
+    const [commandName] = commandKeys;
     const command = this.getCommand(commandName);
-    const commandArguments = parsedCommand[commandName] ?? [];
-    command.execute(...commandArguments);
+    
+    // Collect all arguments including other flags
+    const allArguments: string[] = [];
+    for (const key of commandKeys) {
+      if (key === commandName) {
+        allArguments.push(...parsedCommand[key]);
+      } else if (key.startsWith('--')) {
+        allArguments.push(key, ...parsedCommand[key]);
+      }
+    }
+    
+    command.execute(...allArguments);
   }
 }
