@@ -1,6 +1,6 @@
 import convict from 'convict';
 import { ipaddress } from 'convict-format-with-validator';
-import 'dotenv/config';
+import 'dotenv/config.js';
 
 convict.addFormat(ipaddress);
 
