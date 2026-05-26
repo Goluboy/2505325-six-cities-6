@@ -87,7 +87,7 @@ export class UserController extends Controller {
 
   private async uploadAvatar(req: Request, res: Response): Promise<void> {
     const userId = req.body.id;
-    
+
     if (!req.file) {
       this.badRequest();
       return;
@@ -95,7 +95,7 @@ export class UserController extends Controller {
 
     const avatarPath = `/uploads/${req.file.filename}`;
     const updatedUser = await this.userService.updateAvatar(userId, avatarPath);
-    
+
     this.ok(res, updatedUser, 'Avatar uploaded successfully');
   }
 }

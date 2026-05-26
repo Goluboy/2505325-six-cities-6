@@ -26,5 +26,5 @@ export class CreateUserDto {
   @Expose()
   @IsOptional()
   @IsString()
-    avatar?: string
+    avatar?: string;
 }

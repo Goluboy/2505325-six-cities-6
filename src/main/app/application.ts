@@ -39,7 +39,7 @@ class Application {
     this.expressApp.use('/api', this.offerController.router);
     this.expressApp.use('/api', this.userController.router);
     this.expressApp.use('/api', this.commentContholler.router);
-    
+
   }
 
   registerStatic() {

@@ -20,7 +20,7 @@ export class CheckEntityExistsMiddleware implements IMiddleware {
     const id = req.params[this.paramName];
 
     if (typeof id !== 'string') {
-        throw new BadRequestError(`'${this.paramName}' must be str`);
+      throw new BadRequestError(`'${this.paramName}' must be str`);
     }
 
     if (!id) {
