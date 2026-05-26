@@ -5,7 +5,7 @@ import { Logger } from 'pino';
 import { OfferService } from '../../database/index.js';
 import { CreateOfferDto, UpdateOfferDto } from '../../../shared/dto/create-offer.dto.js';
 import { Controller } from './controller.abstract.js';
-import { ValidateObjectIdMiddleware, ValidateDtoMiddleware } from '../../common/middlewares/index.js';
+import { ValidateObjectIdMiddleware, ValidateDtoMiddleware, CheckEntityExistsMiddleware } from '../../common/middlewares/index.js';
 
 @injectable()
 export class OfferController extends Controller {
@@ -21,6 +21,7 @@ export class OfferController extends Controller {
     const validateObjectId = new ValidateObjectIdMiddleware('id').execute;
     const validateCreateOfferDto = new ValidateDtoMiddleware(CreateOfferDto).execute;
     const validateUpdateOfferDto = new ValidateDtoMiddleware(UpdateOfferDto).execute;
+    const checkOfferExists = new CheckEntityExistsMiddleware(this.offerService, 'id').execute;
 
     this.addRoute({
       path: '/offers',
@@ -39,21 +40,21 @@ export class OfferController extends Controller {
       path: '/offers/:id',
       method: 'get',
       handler: asyncHandler(this.findById.bind(this)),
-      middlewares: [validateObjectId],
+      middlewares: [validateObjectId, checkOfferExists],
     });
 
     this.addRoute({
       path: '/offers/:id',
       method: 'patch',
       handler: asyncHandler(this.update.bind(this)),
-      middlewares: [validateObjectId, validateUpdateOfferDto],
+      middlewares: [validateObjectId, validateUpdateOfferDto, checkOfferExists],
     });
 
     this.addRoute({
       path: '/offers/:id',
       method: 'delete',
       handler: asyncHandler(this.delete.bind(this)),
-      middlewares: [validateObjectId],
+      middlewares: [validateObjectId, checkOfferExists],
     });
 
     this.addRoute({
@@ -72,14 +73,14 @@ export class OfferController extends Controller {
       path: '/offers/favorites/:id',
       method: 'post',
       handler: asyncHandler(this.addToFavorites.bind(this)),
-      middlewares: [validateObjectId],
+      middlewares: [validateObjectId, checkOfferExists],
     });
 
     this.addRoute({
       path: '/offers/favorites/:id',
       method: 'delete',
       handler: asyncHandler(this.removeFromFavorites.bind(this)),
-      middlewares: [validateObjectId],
+      middlewares: [validateObjectId, checkOfferExists],
     });
   }
 
@@ -101,9 +102,6 @@ export class OfferController extends Controller {
     this.logger.info('Getting offer by id:', id);
 
     const offer = await this.offerService.findById(id);
-    if (!offer) {
-      this.notFound('Offer not found');
-    }
 
     this.ok(res, offer, 'Offer retrieved successfully');
   }
@@ -113,9 +111,6 @@ export class OfferController extends Controller {
     this.logger.info('Updating offer with id:', id);
 
     const offer = await this.offerService.updateById(id, req.body);
-    if (!offer) {
-      this.notFound('Offer not found');
-    }
 
     this.ok(res, offer, 'Offer updated successfully');
   }
@@ -124,10 +119,7 @@ export class OfferController extends Controller {
     const id = req.params.id as string;
     this.logger.info('Deleting offer with id:', id);
 
-    const deleted = await this.offerService.deleteById(id);
-    if (!deleted) {
-      this.notFound('Offer not found');
-    }
+    await this.offerService.deleteById(id);
 
     this.noContent(res);
   }
@@ -141,7 +133,7 @@ export class OfferController extends Controller {
   }
 
   private async findFavorites(req: Request, res: Response): Promise<void> {
-    const userId = ((req as any).user)?._id || 'default-user-id';
+    const userId = (req.body.user)?._id || 'default-user-id';
     this.logger.info('Getting favorite offers for user:', userId);
 
     const offers = await this.offerService.findFavorites(userId);
@@ -150,28 +142,20 @@ export class OfferController extends Controller {
 
   private async addToFavorites(req: Request, res: Response): Promise<void> {
     const offerId = req.params.id as string;
-    const userId = ((req as any).user)?._id || 'default-user-id';
+    const userId = (req.body.user)?._id || 'default-user-id';
     this.logger.info('Adding offer to favorites:', offerId, 'for user:', userId);
 
     const offer = await this.offerService.addToFavorites(offerId, userId);
-    if (!offer) {
-      this.notFound('Offer not found');
-      return;
-    }
 
     this.ok(res, offer, 'Offer added to favorites');
   }
 
   private async removeFromFavorites(req: Request, res: Response): Promise<void> {
     const offerId = req.params.id as string;
-    const userId = ((req as any).user)?._id || 'default-user-id';
+    const userId = (req.body.user)?._id || 'default-user-id';
     this.logger.info('Removing offer from favorites:', offerId, 'for user:', userId);
 
     const offer = await this.offerService.removeFromFavorites(offerId, userId);
-    if (!offer) {
-      this.notFound('Offer not found');
-      return;
-    }
 
     this.ok(res, offer, 'Offer removed from favorites');
   }

@@ -16,6 +16,7 @@ export interface UserServiceInterface {
   findByEmail(email: string): Promise<UserModel | null>;
   create(dto: CreateUserDto): Promise<UserModel>;
   findOrCreate(userData: Partial<UserModel>): Promise<UserModel>;
+  updateAvatar(id: string, avatarPath: string): Promise<UserModel | null>;
 }
 
 export interface OfferServiceInterface {

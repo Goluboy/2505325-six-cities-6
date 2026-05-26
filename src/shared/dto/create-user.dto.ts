@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsEmail, IsString, MinLength, MaxLength, IsIn } from 'class-validator';
+import { IsEmail, IsString, MinLength, MaxLength, IsIn, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
   @Expose()
@@ -22,4 +22,9 @@ export class CreateUserDto {
   @Expose()
   @IsIn(['default', 'pro'])
     type!: 'default' | 'pro';
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+    avatar?: string;
 }

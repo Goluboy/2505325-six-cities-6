@@ -47,6 +47,12 @@ const configSchema = convict({
     env: 'DB_PASSWORD',
     default: 'test',
   },
+  uploadDirectory: {
+    doc: 'Directory for user-uploaded files',
+    format: String,
+    env: 'UPLOAD_DIRECTORY',
+    default: './uploads',
+  },
 });
 
 configSchema.validate({ allowed: 'strict' });
