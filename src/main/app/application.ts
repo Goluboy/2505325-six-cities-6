@@ -39,12 +39,19 @@ class Application {
     this.expressApp.use('/api', this.offerController.router);
     this.expressApp.use('/api', this.userController.router);
     this.expressApp.use('/api', this.commentContholler.router);
+    
   }
+
+  registerStatic() {
+    this.expressApp.use('/uploads', express.static(configSchema.get('uploadDirectory')));
+  }
+
 
   public async init(): Promise<void> {
     this.registerMiddlewares();
     this.registerRoutes();
     this.registerExceptionFilter();
+    this.registerStatic();
     const port = configSchema.get('port');
     const dbHost = configSchema.get('dbHost');
     const dbPort = configSchema.get('dbPort');

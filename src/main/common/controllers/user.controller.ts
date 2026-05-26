@@ -5,7 +5,7 @@ import { Logger } from 'pino';
 import { UserService } from '../../database/index.js';
 import { CreateUserDto, LoginDto } from '../../../shared/dto/index.js';
 import { Controller } from './controller.abstract.js';
-import { ValidateDtoMiddleware } from '../../common/middlewares/index.js';
+import { ValidateDtoMiddleware, UploadMiddleware } from '../../common/middlewares/index.js';
 
 @injectable()
 export class UserController extends Controller {
@@ -20,6 +20,7 @@ export class UserController extends Controller {
   private initRoutes(): void {
     const validateCreateUserDto = new ValidateDtoMiddleware(CreateUserDto).execute;
     const validateLoginDto = new ValidateDtoMiddleware(LoginDto).execute;
+    const uploadFile = new UploadMiddleware('avatar').execute;
 
     this.addRoute({
       path: '/users',
@@ -46,6 +47,13 @@ export class UserController extends Controller {
       method: 'get',
       handler: asyncHandler(this.checkStatus.bind(this)),
     });
+
+    this.addRoute({
+      path: '/users/avatar',
+      method: 'post',
+      handler: asyncHandler(this.uploadAvatar.bind(this)),
+      middlewares: [uploadFile],
+    });
   }
 
   private async create(req: Request, res: Response): Promise<void> {
@@ -69,12 +77,25 @@ export class UserController extends Controller {
 
   private async logout(req: Request, res: Response): Promise<void> {
     this.logger.info('User logout');
-    // TODO: Implement logout logic (remove token, etc)
     this.ok(res, null, 'Logout successful');
   }
 
   private async checkStatus(req: Request, res: Response): Promise<void> {
     this.logger.info('Checking user status');
     this.ok(res, null, 'User status checked');
+  }
+
+  private async uploadAvatar(req: Request, res: Response): Promise<void> {
+    const userId = req.body.id;
+    
+    if (!req.file) {
+      this.badRequest();
+      return;
+    }
+
+    const avatarPath = `/uploads/${req.file.filename}`;
+    const updatedUser = await this.userService.updateAvatar(userId, avatarPath);
+    
+    this.ok(res, updatedUser, 'Avatar uploaded successfully');
   }
 }

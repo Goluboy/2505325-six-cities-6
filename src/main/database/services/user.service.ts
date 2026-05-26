@@ -29,4 +29,8 @@ export class UserService implements UserServiceInterface {
     }
     return user;
   }
+
+  public async updateAvatar(id: string, avatarPath: string): Promise<UserModel | null> {
+    return UserEntity.findByIdAndUpdate(id, { avatar: avatarPath }, { new: true }).exec();
+  }
 }

@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import { CommentService, OfferService } from '../../database/index.js';
 import { Logger } from 'pino';
 import { CreateCommentDto } from '../../../shared/dto/create-comment.dto.js';
-import { ValidateObjectIdMiddleware } from '../middlewares/index.js';
+import { ValidateObjectIdMiddleware, CheckEntityExistsMiddleware } from '../middlewares/index.js';
 
 @injectable()
 export class CommentController extends Controller{
@@ -20,19 +20,20 @@ export class CommentController extends Controller{
 
   initRoutes() {
     const validateObjectId = new ValidateObjectIdMiddleware('id').execute;
+    const checkOfferExists = new CheckEntityExistsMiddleware(this.offerService, 'id').execute;
 
     this.addRoute({
       path: '/offers/:id/comment',
       method: 'get',
       handler: expressAsyncHandler(this.index.bind(this)),
-      middlewares: [validateObjectId]
+      middlewares: [validateObjectId, checkOfferExists]
     });
 
     this.addRoute({
       path: '/offers/:id/comment',
       method: 'post',
       handler: expressAsyncHandler(this.create.bind(this)),
-      middlewares: [validateObjectId]
+      middlewares: [validateObjectId, checkOfferExists]
     });
   }
 
