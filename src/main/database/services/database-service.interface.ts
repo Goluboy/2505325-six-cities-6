@@ -26,7 +26,7 @@ export interface OfferServiceInterface {
   updateById(id: string, dto: UpdateOfferDto): Promise<OfferModel | null>;
   deleteById(id: string): Promise<boolean>;
   findPremiumByCity(city: string, limit?: number): Promise<OfferModel[]>;
-  findFavorites(userId: Types.ObjectId): Promise<OfferModel[]>;
+  findFavorites(userId: string): Promise<OfferModel[]>;
   addToFavorites(offerId: string, userId: string): Promise<OfferModel | null>;
   removeFromFavorites(offerId: string, userId: string): Promise<OfferModel | null>;
   incrementCommentCount(offerId: string): Promise<void>;
