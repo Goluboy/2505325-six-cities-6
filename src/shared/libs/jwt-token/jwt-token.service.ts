@@ -17,7 +17,7 @@ export class JwtTokenService {
 
   public async generateToken(userId: string, email: string): Promise<string> {
     const secret = new TextEncoder().encode(this.jwtSecret);
-    
+
     return new SignJWT({ userId, email } as TokenPayload)
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()

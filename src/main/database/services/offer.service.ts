@@ -36,8 +36,8 @@ export class OfferService implements OfferServiceInterface {
       .sort({ createdAt: -1 })
       .limit(limit)
       .exec();
-    
-    offers.forEach(offer => this.setFavoriteFlag(offer, userId));
+
+    offers.forEach((offer) => this.setFavoriteFlag(offer, userId));
     return offers;
   }
 
@@ -48,8 +48,8 @@ export class OfferService implements OfferServiceInterface {
 
     const objectId = new Types.ObjectId(userId);
     const offers = await OfferEntity.find({ favoriteUsers: objectId }).exec();
-    
-    offers.forEach(offer => this.setFavoriteFlag(offer, userId));
+
+    offers.forEach((offer) => this.setFavoriteFlag(offer, userId));
     return offers;
   }
 
@@ -120,7 +120,7 @@ export class OfferService implements OfferServiceInterface {
 
     const userObjectId = new Types.ObjectId(userId);
     offer.isFavorite = (offer.favoriteUsers || []).some(
-      id => id.toString() === userObjectId.toString()
+      (id) => id.toString() === userObjectId.toString()
     );
   }
 }

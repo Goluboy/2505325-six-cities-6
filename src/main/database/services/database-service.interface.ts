@@ -1,7 +1,6 @@
 import type { UserModel } from '../models/user.model.js';
 import type { OfferModel } from '../models/offer.model.js';
 import type { CommentModel } from '../models/comment.model.js';
-import type { Types } from 'mongoose';
 import { CreateUserDto } from '../../../shared/dto/create-user.dto.js';
 import { CreateOfferDto, UpdateOfferDto } from '../../../shared/dto/create-offer.dto.js';
 import { CreateCommentDto } from '../../../shared/dto/create-comment.dto.js';

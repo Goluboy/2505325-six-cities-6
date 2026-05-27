@@ -52,8 +52,8 @@ export class AuthService {
       this.logger.warn(`Login attempt with non-existent email: ${dto.email}`);
       throw new Error('Invalid email or password');
     }
-    
-    let isValid = this.verifyPassword(dto.password, user.password);
+
+    const isValid = this.verifyPassword(dto.password, user.password);
 
     if (!isValid) {
       this.logger.warn(`Invalid password for user: ${dto.email}`);
@@ -86,6 +86,7 @@ export class AuthService {
       return null;
     }
   }
+
   public async logout(_token: string): Promise<void> {
     // Для stateless JWT токенов logout не требует действий на сервере
     // Клиент просто удаляет токен

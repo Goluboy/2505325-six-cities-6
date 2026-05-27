@@ -83,7 +83,7 @@ export class UserController extends Controller {
     try {
       const { token, userId } = await this.authService.login(req.body);
       const user = await this.userService.findById(userId);
-      
+
       this.ok(res, { user, token }, 'Login successful');
     } catch (error) {
       if (error instanceof Error && error.message.includes('Invalid')) {
@@ -102,7 +102,7 @@ export class UserController extends Controller {
   private async checkStatus(req: Request, res: Response): Promise<void> {
     this.logger.info('Checking user status');
     const user = (req as any).user;
-    
+
     if (!user) {
       this.unauthorized('User not authenticated');
     }

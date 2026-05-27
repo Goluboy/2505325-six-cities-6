@@ -20,7 +20,7 @@ container.bind<Logger>('Logger').toConstantValue(logger);
 container.bind('Config').toConstantValue(configSchema);
 
 container.bind(ExceptionFilter).toSelf();
-container.bind(AuthService).toSelf()
+container.bind(AuthService).toSelf();
 container.bind(DatabaseService).toSelf();
 container.bind(UserService).toSelf();
 container.bind(OfferService).toSelf();
