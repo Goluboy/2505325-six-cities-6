@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { configSchema } from '../config/index.js';
 import { Logger } from 'pino';
 import express, { Application as ExpressApp, ErrorRequestHandler } from 'express';
+import cors from 'cors';
 import { OfferController, UserController } from '../common/controllers/index.js';
 import { DatabaseService } from '../database/index.js';
 import { ExceptionFilter } from '../common/filters/exception-filter.js';
@@ -23,7 +24,9 @@ class Application {
   }
 
   public registerMiddlewares(): void {
+    this.expressApp.use(cors());
     this.expressApp.use(express.json());
+    this.logger.info('Middleware registered: cors()');
     this.logger.info('Middleware registered: express.json()');
   }
 

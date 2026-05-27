@@ -7,7 +7,6 @@ import { UnauthorizedError } from '../filters/exception-filter.js';
 @injectable()
 export class AuthGuardMiddleware {
   constructor(
-    @inject('Logger') private readonly logger: Logger,
     @inject(JwtTokenService) private readonly jwtService: JwtTokenService
   ) {}
 
@@ -16,7 +15,6 @@ export class AuthGuardMiddleware {
       const authHeader = req.headers.authorization;
 
       if (!authHeader?.startsWith('Bearer ')) {
-        this.logger.warn('Missing authorization header');
         return next(new UnauthorizedError('Missing or invalid authorization header'));
       }
 
@@ -24,12 +22,10 @@ export class AuthGuardMiddleware {
       const payload = await this.jwtService.verifyToken(token);
 
       if (!payload) {
-        this.logger.warn('Invalid or expired token');
         return next(new UnauthorizedError('Invalid or expired token'));
       }
 
       (req as any).user = payload;
-      this.logger.info(`User authenticated: ${payload.email}`);
       return next();
     } catch (error) {
       return next(error);

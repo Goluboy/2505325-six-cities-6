@@ -36,7 +36,7 @@ export class OfferController extends Controller {
       path: '/offers',
       method: 'post',
       handler: asyncHandler(this.create.bind(this)),
-      middlewares: [validateCreateOfferDto],
+      middlewares: [authGuard, validateCreateOfferDto],
     });
 
     this.addRoute({
@@ -50,14 +50,14 @@ export class OfferController extends Controller {
       path: '/offers/:id',
       method: 'patch',
       handler: asyncHandler(this.update.bind(this)),
-      middlewares: [validateObjectId, validateUpdateOfferDto, checkOfferExists],
+      middlewares: [authGuard, validateObjectId, validateUpdateOfferDto, checkOfferExists],
     });
 
     this.addRoute({
       path: '/offers/:id',
       method: 'delete',
       handler: asyncHandler(this.delete.bind(this)),
-      middlewares: [validateObjectId, checkOfferExists],
+      middlewares: [authGuard, validateObjectId, checkOfferExists],
     });
 
     this.addRoute({
@@ -137,7 +137,7 @@ export class OfferController extends Controller {
   }
 
   private async findFavorites(req: Request, res: Response): Promise<void> {
-    const userId = (req.body.user)?._id || 'default-user-id';
+    const userId = (req as any).user?._id || 'default-user-id';
     this.logger.info('Getting favorite offers for user:', userId);
 
     const offers = await this.offerService.findFavorites(userId);
@@ -146,7 +146,7 @@ export class OfferController extends Controller {
 
   private async addToFavorites(req: Request, res: Response): Promise<void> {
     const offerId = req.params.id as string;
-    const userId = (req.body.user)?._id || 'default-user-id';
+    const userId = (req as any).user?._id || 'default-user-id';
     this.logger.info('Adding offer to favorites:', offerId, 'for user:', userId);
 
     const offer = await this.offerService.addToFavorites(offerId, userId);
@@ -156,7 +156,7 @@ export class OfferController extends Controller {
 
   private async removeFromFavorites(req: Request, res: Response): Promise<void> {
     const offerId = req.params.id as string;
-    const userId = (req.body.user)?._id || 'default-user-id';
+    const userId = (req as any).user?._id || 'default-user-id';
     this.logger.info('Removing offer from favorites:', offerId, 'for user:', userId);
 
     const offer = await this.offerService.removeFromFavorites(offerId, userId);
