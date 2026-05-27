@@ -1,8 +1,10 @@
-import { injectable } from 'inversify';
+import { injectable, inject } from 'inversify';
 import * as crypto from 'node:crypto';
+import { Logger } from 'pino';
 import { UserModel, UserEntity } from '../models/user.model.js';
 import { CreateUserDto } from '../../../shared/dto/create-user.dto.js';
 import { LoginDto } from '../../../shared/dto/login.dto.js';
+import { JwtTokenService } from '../../../shared/libs/jwt-token/index.js';
 
 export interface AuthToken {
   token: string;
@@ -11,7 +13,10 @@ export interface AuthToken {
 
 @injectable()
 export class AuthService {
-  private saltRounds = 10;
+  constructor(
+    @inject('Logger') private readonly logger: Logger,
+    @inject(JwtTokenService) private readonly jwtTokenService: JwtTokenService
+  ) {}
 
   public hashPassword(password: string): string {
     return crypto.createHmac('sha256', password).digest('hex');
@@ -26,6 +31,7 @@ export class AuthService {
     const existingUser = await UserEntity.findOne({ email: dto.email }).exec();
 
     if (existingUser) {
+      this.logger.warn(`User with email ${dto.email} already exists`);
       throw new Error('User with this email already exists');
     }
 
@@ -35,6 +41,7 @@ export class AuthService {
       password: hashedPassword
     });
 
+    this.logger.info(`Registering new user with email: ${dto.email}`);
     return user.save();
   }
 
@@ -42,16 +49,23 @@ export class AuthService {
     const user = await UserEntity.findOne({ email: dto.email }).exec();
 
     if (!user) {
+      this.logger.warn(`Login attempt with non-existent email: ${dto.email}`);
       throw new Error('Invalid email or password');
     }
 
     const isValid = this.verifyPassword(dto.password, user.password);
 
     if (!isValid) {
+      this.logger.warn(`Invalid password for user: ${dto.email}`);
       throw new Error('Invalid email or password');
     }
 
-    const token = this.generateToken(user._id.toString());
+    const token = await this.jwtTokenService.generateToken(
+      user._id.toString(),
+      user.email
+    );
+
+    this.logger.info(`User ${dto.email} logged in successfully`);
 
     return {
       token,
@@ -61,41 +75,14 @@ export class AuthService {
 
   public async verifyToken(token: string): Promise<UserModel | null> {
     try {
-      const decoded = this.decodeToken(token);
-      if (!decoded) {
+      const payload = await this.jwtTokenService.verifyToken(token);
+      if (!payload) {
         return null;
       }
 
-      return UserEntity.findById(decoded.userId).exec();
-    } catch {
-      return null;
-    }
-  }
-
-  private generateToken(userId: string): string {
-    const timestamp = Date.now();
-    const data = `${userId}:${timestamp}:${process.env.AUTH_SECRET || 'default-secret'}`;
-    const signature = crypto.createHmac('sha256', process.env.AUTH_SECRET || 'default-secret').update(data).digest('hex');
-    return Buffer.from(`${data}:${signature}`).toString('base64');
-  }
-
-  private decodeToken(token: string): { userId: string; timestamp: number } | null {
-    try {
-      const decoded = Buffer.from(token, 'base64').toString('utf-8');
-      const [userId, timestamp, secret, signature] = decoded.split(':');
-
-      const data = `${userId}:${timestamp}:${secret}`;
-      const expectedSignature = crypto.createHmac('sha256', secret).update(data).digest('hex');
-
-      if (signature !== expectedSignature) {
-        return null;
-      }
-
-      return {
-        userId,
-        timestamp: parseInt(timestamp, 10)
-      };
-    } catch {
+      return UserEntity.findById(payload.userId).exec();
+    } catch (error) {
+      this.logger.error(`Token verification failed: ${error}`);
       return null;
     }
   }

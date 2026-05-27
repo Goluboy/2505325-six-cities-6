@@ -5,13 +5,15 @@ import { Logger } from 'pino';
 import { OfferService } from '../../database/index.js';
 import { CreateOfferDto, UpdateOfferDto } from '../../../shared/dto/create-offer.dto.js';
 import { Controller } from './controller.abstract.js';
-import { ValidateObjectIdMiddleware, ValidateDtoMiddleware, CheckEntityExistsMiddleware } from '../../common/middlewares/index.js';
+import { ValidateObjectIdMiddleware, ValidateDtoMiddleware, CheckEntityExistsMiddleware, AuthGuardMiddleware } from '../../common/middlewares/index.js';
+import { JwtTokenService } from '../../../shared/libs/jwt-token/index.js';
 
 @injectable()
 export class OfferController extends Controller {
   constructor(
     @inject('Logger') private readonly logger: Logger,
-    @inject(OfferService) private readonly offerService: OfferService
+    @inject(OfferService) private readonly offerService: OfferService,
+    @inject(JwtTokenService) private readonly jwtTokenService: JwtTokenService
   ) {
     super();
     this.initRoutes();
@@ -22,6 +24,7 @@ export class OfferController extends Controller {
     const validateCreateOfferDto = new ValidateDtoMiddleware(CreateOfferDto).execute;
     const validateUpdateOfferDto = new ValidateDtoMiddleware(UpdateOfferDto).execute;
     const checkOfferExists = new CheckEntityExistsMiddleware(this.offerService, 'id').execute;
+    const authGuard = new AuthGuardMiddleware(this.jwtTokenService).execute;
 
     this.addRoute({
       path: '/offers',
@@ -67,20 +70,21 @@ export class OfferController extends Controller {
       path: '/offers/favorites',
       method: 'get',
       handler: asyncHandler(this.findFavorites.bind(this)),
+      middlewares: [authGuard],
     });
 
     this.addRoute({
       path: '/offers/favorites/:id',
       method: 'post',
       handler: asyncHandler(this.addToFavorites.bind(this)),
-      middlewares: [validateObjectId, checkOfferExists],
+      middlewares: [authGuard, validateObjectId, checkOfferExists],
     });
 
     this.addRoute({
       path: '/offers/favorites/:id',
       method: 'delete',
       handler: asyncHandler(this.removeFromFavorites.bind(this)),
-      middlewares: [validateObjectId, checkOfferExists],
+      middlewares: [authGuard, validateObjectId, checkOfferExists],
     });
   }
 

@@ -31,35 +31,64 @@ export class OfferService implements OfferServiceInterface {
     return result !== null;
   }
 
-  public async findPremiumByCity(city: string, limit = 3): Promise<OfferModel[]> {
-    return OfferEntity.find({ city, isPremium: true })
+  public async findPremiumByCity(city: string, limit = 3, userId?: string): Promise<OfferModel[]> {
+    const offers = await OfferEntity.find({ city, isPremium: true })
       .sort({ createdAt: -1 })
       .limit(limit)
       .exec();
+
+    offers.forEach((offer) => this.setFavoriteFlag(offer, userId));
+    return offers;
   }
 
-  public async findFavorites(userId: Types.ObjectId): Promise<OfferModel[]> {
-    return OfferEntity.find({ favoriteUsers: userId }).exec();
+  public async findFavorites(userId: string): Promise<OfferModel[]> {
+    if (!userId) {
+      return [];
+    }
+
+    const objectId = new Types.ObjectId(userId);
+    const offers = await OfferEntity.find({ favoriteUsers: objectId }).exec();
+
+    offers.forEach((offer) => this.setFavoriteFlag(offer, userId));
+    return offers;
   }
 
   public async addToFavorites(offerId: string, userId: string): Promise<OfferModel | null> {
-    return OfferEntity.findByIdAndUpdate(
+    if (!userId) {
+      return null;
+    }
+
+    const offer = await OfferEntity.findByIdAndUpdate(
       offerId,
       {
         $addToSet: { favoriteUsers: new Types.ObjectId(userId) }
       },
       { new: true }
     ).exec();
+
+    if (offer) {
+      this.setFavoriteFlag(offer, userId);
+    }
+    return offer;
   }
 
   public async removeFromFavorites(offerId: string, userId: string): Promise<OfferModel | null> {
-    return OfferEntity.findByIdAndUpdate(
+    if (!userId) {
+      return null;
+    }
+
+    const offer = await OfferEntity.findByIdAndUpdate(
       offerId,
       {
         $pull: { favoriteUsers: new Types.ObjectId(userId) }
       },
       { new: true }
     ).exec();
+
+    if (offer) {
+      this.setFavoriteFlag(offer, userId);
+    }
+    return offer;
   }
 
   public async incrementCommentCount(offerId: string): Promise<void> {
@@ -81,5 +110,17 @@ export class OfferService implements OfferServiceInterface {
     const averageRating = Number((totalRating / comments.length).toFixed(1));
 
     await OfferEntity.findByIdAndUpdate(offerId, { rating: averageRating }).exec();
+  }
+
+  private setFavoriteFlag(offer: OfferModel, userId?: string): void {
+    if (!userId) {
+      offer.isFavorite = false;
+      return;
+    }
+
+    const userObjectId = new Types.ObjectId(userId);
+    offer.isFavorite = (offer.favoriteUsers || []).some(
+      (id) => id.toString() === userObjectId.toString()
+    );
   }
 }

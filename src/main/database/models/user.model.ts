@@ -13,7 +13,7 @@ export class UserModel extends defaultClasses.TimeStamps {
   @prop({ required: false })
   public avatar?: string;
 
-  @prop({ required: true, minlength: 6, maxlength: 12 })
+  @prop({ required: true, minlength: 64, maxlength: 64 })
   public password!: string;
 
   @prop({ required: true, type: String, enum: ['default', 'pro'] })

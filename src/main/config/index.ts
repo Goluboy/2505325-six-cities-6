@@ -53,6 +53,12 @@ const configSchema = convict({
     env: 'UPLOAD_DIRECTORY',
     default: './uploads',
   },
+  jwtSecret: {
+    doc: 'Secret key for JWT',
+    format: String,
+    env: 'JWT_SECRET',
+    default: 'default-secret-key12345367869',
+  }
 });
 
 configSchema.validate({ allowed: 'strict' });

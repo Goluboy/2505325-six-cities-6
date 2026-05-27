@@ -1,7 +1,6 @@
 import type { UserModel } from '../models/user.model.js';
 import type { OfferModel } from '../models/offer.model.js';
 import type { CommentModel } from '../models/comment.model.js';
-import type { Types } from 'mongoose';
 import { CreateUserDto } from '../../../shared/dto/create-user.dto.js';
 import { CreateOfferDto, UpdateOfferDto } from '../../../shared/dto/create-offer.dto.js';
 import { CreateCommentDto } from '../../../shared/dto/create-comment.dto.js';
@@ -26,7 +25,7 @@ export interface OfferServiceInterface {
   updateById(id: string, dto: UpdateOfferDto): Promise<OfferModel | null>;
   deleteById(id: string): Promise<boolean>;
   findPremiumByCity(city: string, limit?: number): Promise<OfferModel[]>;
-  findFavorites(userId: Types.ObjectId): Promise<OfferModel[]>;
+  findFavorites(userId: string): Promise<OfferModel[]>;
   addToFavorites(offerId: string, userId: string): Promise<OfferModel | null>;
   removeFromFavorites(offerId: string, userId: string): Promise<OfferModel | null>;
   incrementCommentCount(offerId: string): Promise<void>;
