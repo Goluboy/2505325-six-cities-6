@@ -1,5 +1,4 @@
 import { prop, getModelForClass, defaultClasses, modelOptions } from '@typegoose/typegoose';
-import { UserType } from '../../../shared/models/user.interface.js';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 @modelOptions({ options: { allowMixed: 0 } })
@@ -16,8 +15,8 @@ export class UserModel extends defaultClasses.TimeStamps {
   @prop({ required: true, minlength: 64, maxlength: 64 })
   public password!: string;
 
-  @prop({ required: true, type: String, enum: ['default', 'pro'] })
-  public type!: UserType;
+  @prop({ required: true })
+  public isPro!: boolean;
 }
 
 export const UserEntity = getModelForClass(UserModel);

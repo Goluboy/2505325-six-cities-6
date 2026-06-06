@@ -7,6 +7,7 @@ import { Logger } from 'pino';
 import { CreateCommentDto } from '../../../shared/dto/create-comment.dto.js';
 import { ValidateObjectIdMiddleware, CheckEntityExistsMiddleware, AuthGuardMiddleware, ValidateDtoMiddleware } from '../middlewares/index.js';
 import { JwtTokenService } from '../../../shared/libs/jwt-token/index.js';
+import { Types } from 'mongoose';
 
 @injectable()
 export class CommentController extends Controller{
@@ -43,9 +44,12 @@ export class CommentController extends Controller{
 
   private async create(req: Request, res: Response){
     const offerId = req.params.id as string;
+    const author = req.user?.userId as string;
     const dto = this.transformToDto(CreateCommentDto, req.body);
 
-    dto.offer = offerId;
+    dto.offer = new Types.ObjectId(offerId);
+    dto.author = new Types.ObjectId(author);
+    dto.publishDate = new Date();
 
     this.logger.info('New comment for offer:', offerId);
 

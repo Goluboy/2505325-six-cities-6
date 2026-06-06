@@ -5,7 +5,7 @@ import {
   OfferInterface,
   CityInterface,
   CoordinatesInterface,
-  UserInterface, findHouseType, findUserType, findAmenityType
+  UserInterface, findHouseType, findAmenityType
 } from '../../models/index.js';
 
 export class TSVFileReader implements FileReader {
@@ -70,8 +70,8 @@ export class TSVFileReader implements FileReader {
       throw new Error(`Invalid HouseType: "${typeRaw}"`);
     }
 
-    const userType = findUserType(authorTypeRaw?.trim());
-    if (!userType) {
+    const isPro = Boolean(authorTypeRaw?.trim().toLowerCase());
+    if (!isPro) {
       throw new Error(`Invalid UserType: "${authorTypeRaw}"`);
     }
 
@@ -94,7 +94,7 @@ export class TSVFileReader implements FileReader {
       email: authorEmail?.trim(),
       avatar: authorAvatar?.trim() || undefined,
       password: authorPassword?.trim(),
-      type: userType,
+      isPro: isPro,
     };
 
     return {
@@ -103,8 +103,10 @@ export class TSVFileReader implements FileReader {
       publishDate: new Date(publishedDate),
       city: {
         name: city?.trim(),
-        latitude,
-        longitude,
+        coordinates:{
+          latitude,
+          longitude,
+        }
       } satisfies CityInterface,
       previewImage: previewImage?.trim(),
       photos: photos?.split(';').map((photo) => photo.trim()),

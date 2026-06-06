@@ -1,5 +1,6 @@
-import { Expose } from 'class-transformer';
-import { IsString, MinLength, MaxLength, IsNumber, Min, Max, IsDate } from 'class-validator';
+import { Expose, Transform } from 'class-transformer';
+import { IsString, MinLength, MaxLength, IsNumber, Min, Max, IsDate, IsOptional } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreateCommentDto {
   @Expose()
@@ -14,15 +15,9 @@ export class CreateCommentDto {
   @Max(5)
     rating!: number;
 
-  @Expose()
-  @IsString()
-    author!: string;
+  offer!: Types.ObjectId;
 
-  @Expose()
-  @IsString()
-    offer!: string;
+  author!: Types.ObjectId;
 
-  @Expose()
-  @IsDate()
-    publishDate!: Date;
+  publishDate!: Date;
 }

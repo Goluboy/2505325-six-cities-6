@@ -24,7 +24,12 @@ class Application {
   }
 
   public registerMiddlewares(): void {
-    this.expressApp.use(cors());
+    this.expressApp.use(cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }));
     this.expressApp.use(express.json());
     this.logger.info('Middleware registered: cors()');
     this.logger.info('Middleware registered: express.json()');
@@ -39,9 +44,9 @@ class Application {
   }
 
   public registerRoutes(): void {
-    this.expressApp.use('/api', this.offerController.router);
-    this.expressApp.use('/api', this.userController.router);
-    this.expressApp.use('/api', this.commentContholler.router);
+    this.expressApp.use(this.offerController.router);
+    this.expressApp.use(this.userController.router);
+    this.expressApp.use(this.commentContholler.router);
 
   }
 

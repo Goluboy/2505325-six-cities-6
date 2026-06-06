@@ -1,6 +1,6 @@
 import got from 'got';
 import { MockDataResponse } from './mock-data.type.js';
-import { AmenitiesType, CityInterface, HouseType, OfferInterface, UserInterface, UserType } from '../../shared/index.js';
+import { AmenitiesType, CityInterface, HouseType, OfferInterface, UserInterface } from '../../shared/index.js';
 import { getRandomNumber, getRandomFloat, getRandomElement, getRandomElements, getRandomDate } from '../../shared/libs/index.js';
 
 
@@ -25,7 +25,7 @@ export class OfferGenerator {
       email: getRandomElement(this.mockData.userEmails),
       avatar: getRandomElement(this.mockData.userAvatars) || undefined,
       password: getRandomElement(this.mockData.userPasswords),
-      type: userType,
+      isPro: userType,
     };
 
     const rating = getRandomFloat(1, 5, 1);
@@ -40,8 +40,10 @@ export class OfferGenerator {
       publishDate: getRandomDate(),
       city: {
         name: city.name,
-        latitude: city.latitude,
-        longitude: city.longitude,
+        coordinates: {
+          latitude: city.latitude,
+          longitude: city.longitude,
+        }
       } satisfies CityInterface,
       previewImage: getRandomElement(this.mockData.previewImages),
       photos: getRandomElement(this.mockData.photoSets),
@@ -96,7 +98,7 @@ export async function fetchMockData(baseUrl: string): Promise<MockDataResponse> 
       userEmails: results[8] as string[],
       userAvatars: results[9] as string[],
       userPasswords: results[10] as string[],
-      userTypes: results[11] as UserType[],
+      userTypes: results[11] as boolean[],
     };
 
     return mockData;

@@ -92,7 +92,7 @@ export class ImportCommand implements CommandInterface {
                 email: offerData.author.email,
                 avatar: offerData.author.avatar,
                 password: offerData.author.password,
-                type: offerData.author.type
+                isPro: offerData.author.isPro
               });
               this.logger.info(`Created user: ${offerData.author.email}`);
             }
@@ -106,7 +106,7 @@ export class ImportCommand implements CommandInterface {
             title: offerData.title,
             description: offerData.description,
             publishDate: offerData.publishDate,
-            city: offerData.city.name,
+            city: offerData.city,
             previewImage: offerData.previewImage,
             photos: offerData.photos,
             isPremium: offerData.isPremium,

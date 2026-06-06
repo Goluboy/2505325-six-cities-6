@@ -84,7 +84,7 @@ export class GenerateCommand implements CommandInterface {
       offer.author.email,
       offer.author.avatar ?? '',
       offer.author.password,
-      offer.author.type,
+      offer.author.isPro,
       offer.commentsCount.toString(),
       coordinatesStr,
     ].join('\t');

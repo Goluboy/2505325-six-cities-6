@@ -3,6 +3,7 @@ import { HouseType } from '../../../shared/models/house.type.js';
 import { AmenitiesType } from '../../../shared/models/amentities.type.js';
 import { Types } from 'mongoose';
 import { UserModel } from './user.model.js';
+import { CityInterface, CoordinatesInterface } from '../../../shared/index.js';
 
 export interface Coordinates {
   latitude: number;
@@ -22,7 +23,7 @@ export class OfferModel extends defaultClasses.TimeStamps {
   public publishDate!: Date;
 
   @prop({ required: true })
-  public city!: string;
+  public city!: CityInterface;
 
   @prop({ required: true })
   public previewImage!: string;
@@ -61,7 +62,7 @@ export class OfferModel extends defaultClasses.TimeStamps {
   public commentsCount!: number;
 
   @prop({ required: true, _id: false, type: () => Object })
-  public coordinates!: Coordinates;
+  public coordinates!: CoordinatesInterface;
 
   @prop({ required: false, ref: () => UserModel, type: [Types.ObjectId] })
   public favoriteUsers?: Types.ObjectId[];

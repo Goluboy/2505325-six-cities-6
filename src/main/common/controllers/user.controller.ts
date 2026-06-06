@@ -56,7 +56,7 @@ export class UserController extends Controller {
     });
 
     this.addRoute({
-      path: '/users/avatar',
+      path: '/avatar',
       method: 'post',
       handler: asyncHandler(this.uploadAvatar.bind(this)),
       middlewares: [authGuard, uploadFile],

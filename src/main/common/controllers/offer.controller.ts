@@ -40,6 +40,13 @@ export class OfferController extends Controller {
     });
 
     this.addRoute({
+      path: '/offers/favorites',
+      method: 'get',
+      handler: asyncHandler(this.findFavorites.bind(this)),
+      middlewares: [authGuard],
+    });
+
+    this.addRoute({
       path: '/offers/:id',
       method: 'get',
       handler: asyncHandler(this.findById.bind(this)),
@@ -67,13 +74,6 @@ export class OfferController extends Controller {
     });
 
     this.addRoute({
-      path: '/offers/favorites',
-      method: 'get',
-      handler: asyncHandler(this.findFavorites.bind(this)),
-      middlewares: [authGuard],
-    });
-
-    this.addRoute({
       path: '/offers/favorites/:id',
       method: 'post',
       handler: asyncHandler(this.addToFavorites.bind(this)),
@@ -97,7 +97,10 @@ export class OfferController extends Controller {
   private async create(req: Request, res: Response): Promise<void> {
     this.logger.info('Creating new offer with title:', req.body.title);
 
-    const offer = await this.offerService.create(req.body);
+    const offer = await this.offerService.create({
+      ...req.body,
+      author: req.user?.userId,
+    });
     this.created(res, offer, 'Offer created successfully');
   }
 
@@ -114,7 +117,10 @@ export class OfferController extends Controller {
     const id = req.params.id as string;
     this.logger.info('Updating offer with id:', id);
 
-    const offer = await this.offerService.updateById(id, req.body);
+    const offer = await this.offerService.updateById(id, {
+      ...req.body,
+      author: req.user?.userId,
+    });
 
     this.ok(res, offer, 'Offer updated successfully');
   }
@@ -137,19 +143,19 @@ export class OfferController extends Controller {
   }
 
   private async findFavorites(req: Request, res: Response): Promise<void> {
-    const userId = (req as any).user?._id || 'default-user-id';
+    const userId = req.user?.userId;
     this.logger.info('Getting favorite offers for user:', userId);
 
-    const offers = await this.offerService.findFavorites(userId);
+    const offers = await this.offerService.findFavorites(userId as string);
     this.ok(res, offers, 'Favorite offers retrieved successfully');
   }
 
   private async addToFavorites(req: Request, res: Response): Promise<void> {
     const offerId = req.params.id as string;
-    const userId = (req as any).user?._id || 'default-user-id';
+    const userId = req.user?.userId;
     this.logger.info('Adding offer to favorites:', offerId, 'for user:', userId);
 
-    const offer = await this.offerService.addToFavorites(offerId, userId);
+    const offer = await this.offerService.addToFavorites(offerId, userId as string);
 
     this.ok(res, offer, 'Offer added to favorites');
   }

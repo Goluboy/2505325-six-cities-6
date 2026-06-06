@@ -1,5 +1,5 @@
-import { Expose } from 'class-transformer';
-import { IsEmail, IsString, MinLength, MaxLength, IsIn, IsOptional } from 'class-validator';
+import { Expose, Transform } from 'class-transformer';
+import { IsEmail, IsString, MinLength, MaxLength, IsIn, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateUserDto {
   @Expose()
@@ -20,11 +20,12 @@ export class CreateUserDto {
     password!: string;
 
   @Expose()
-  @IsIn(['default', 'pro'])
-    type!: 'default' | 'pro';
+  @Transform(({ value }) => value ?? false)
+  @IsBoolean()
+    isPro!: boolean;
 
   @Expose()
   @IsOptional()
   @IsString()
-    avatar?: string;
+    avatarUrl?: string;
 }

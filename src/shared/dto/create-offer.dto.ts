@@ -1,20 +1,30 @@
-import { Expose, Type } from 'class-transformer';
-import { IsString, MinLength, MaxLength, IsIn, IsNumber, Min, Max, IsArray, ValidateNested, IsBoolean, IsDateString, IsDate } from 'class-validator';
+import { Expose, Transform, Type } from 'class-transformer';
+import { IsString, MinLength, MaxLength, IsIn, IsNumber, Min, Max, IsArray, ValidateNested, IsBoolean, IsDateString, IsDate, IsOptional } from 'class-validator';
 import { HouseType } from '../models/house.type.js';
 import { AmenitiesType } from '../models/amentities.type.js';
+import { UserInterface } from '../models/user.interface.js';
+import { CityInterface } from '../models/city.interface.js';
 
 export class CoordinatesDto {
-  @Expose()
+  @Expose() // ← ДОБАВЛЕНО
   @IsNumber()
-  @Min(-90)
-  @Max(90)
     latitude!: number;
 
-  @Expose()
+  @Expose() // ← ДОБАВЛЕНО
   @IsNumber()
-  @Min(-180)
-  @Max(180)
     longitude!: number;
+}
+
+export class CityDto {
+  @Expose() // ← ДОБАВЛЕНО
+  @IsString()
+  @IsIn(['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'])
+    name!: string;
+
+  @Expose() // ← ДОБАВЛЕНО
+  @ValidateNested()
+  @Type(() => CoordinatesDto)
+    coordinates!: CoordinatesDto;
 }
 
 export class CreateOfferDto {
@@ -31,13 +41,14 @@ export class CreateOfferDto {
     description!: string;
 
   @Expose()
+  @Transform(({ value }) => new Date(value))
   @IsDate()
     publishDate!: Date;
 
   @Expose()
-  @IsString()
-  @IsIn(['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'])
-    city!: string;
+  @ValidateNested()
+  @Type(() => CityDto)
+    city!: CityDto;
 
   @Expose()
   @IsString()
@@ -54,7 +65,8 @@ export class CreateOfferDto {
 
   @Expose()
   @IsBoolean()
-    isFavorite!: boolean;
+  @IsOptional()
+    isFavorite?: boolean;
 
   @Expose()
   @IsNumber()
@@ -87,12 +99,11 @@ export class CreateOfferDto {
 
   @Expose()
   @IsArray()
-  @IsIn(['Breakfast', 'Air conditioning', 'Laptop friendly workspace', 'Baby seat', 'Washer', 'Towels', 'Fridge'], { each: true })
+  @IsIn(
+    ['Breakfast', 'Air conditioning', 'Laptop friendly workspace', 'Baby seat', 'Washer', 'Towels', 'Fridge'],
+    { each: true }
+  )
     amenities!: AmenitiesType[];
-
-  @Expose()
-  @IsString()
-    author!: string;
 
   @Expose()
   @ValidateNested()

@@ -1,5 +1,6 @@
+import { CoordinatesInterface } from './index.js';
+
 export interface CityInterface {
   name: string;
-  latitude: number;
-  longitude: number;
+  coordinates: CoordinatesInterface
 }

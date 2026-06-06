@@ -32,7 +32,10 @@ export class OfferService implements OfferServiceInterface {
   }
 
   public async findPremiumByCity(city: string, limit = 3, userId?: string): Promise<OfferModel[]> {
-    const offers = await OfferEntity.find({ city, isPremium: true })
+    const offers = await OfferEntity.find({
+      'city.name': city,
+      isPremium: true
+    })
       .sort({ createdAt: -1 })
       .limit(limit)
       .exec();
